@@ -37,34 +37,17 @@ services:
       - '--config.file=/etc/alertmanager/config.yml'
       - '--storage.path=/alertmanager'
     restart: unless-stopped
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - TELEGRAM_CHAT_ID=${TELEGRAM_CHAT_ID}
     expose:
       - 9093
     networks:
       - monitor-net
     labels:
       org.label-schema.group: "monitoring"
-
-  alertmanager-bot:
-    command:
-      - --alertmanager.url=http://alertmanager:9093
-      - --log.level=info
-      - --store=bolt
-      - --bolt.path=/data/bot.db
-      - --telegram.admin=${TELEGRAM_USER_ID}
-      - --telegram.token=${TELEGRAM_BOT_API_KEY}
-    image: metalmatze/alertmanager-bot:0.4.3
-    user: root
-    ports:
-      - 8088:8080
-    container_name: alertmanager-bot
-    hostname: alertmanager-bot
-    environment:
-      TZ: "Europe/Moscow"
-    restart: unless-stopped
-    volumes:
-      - ./alertmanager_bot:/data
-    networks:
-      - monitor-net
+    env_file:
+      - .env
 
   nodeexporter:
     image: prom/node-exporter:v1.8.1
