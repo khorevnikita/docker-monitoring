@@ -1,4 +1,15 @@
-# dockprom
+# Docker monitoring
+
+This is a fork of original repository https://github.com/stefanprodan/dockprom
+
+My changes:
+
+1. Added Alertmanager Bot to send notifications to telegram
+2. Changed ports to 9090-9094 for all services
+
+---
+
+
 
 A monitoring solution for Docker hosts and containers with [Prometheus](https://prometheus.io/), [Grafana](http://grafana.org/), [cAdvisor](https://github.com/google/cadvisor),
 [NodeExporter](https://github.com/prometheus/node_exporter) and alerting with [AlertManager](https://github.com/prometheus/alertmanager).
