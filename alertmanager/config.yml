@@ -12,5 +12,6 @@ receivers:
   - name: 'telegram'
     telegram_configs:
       - bot_token: ${TELEGRAM_BOT_TOKEN}
-        chat_id: ${TELEGRAM_CHAT_ID}
-
+        chat_id: 391137404
+        parse_mode: "HTML"
+        send_resolved: true
