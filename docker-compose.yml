@@ -1,10 +1,11 @@
 networks:
   monitor-net:
+    name: "monitor-net"
     driver: bridge
 
 volumes:
-    prometheus_data: {}
-    grafana_data: {}
+  prometheus_data: { }
+  grafana_data: { }
 
 services:
   prometheus:
@@ -89,6 +90,34 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter
+    container_name: postgres_exporter
+    restart: unless-stopped
+    privileged: true
+    environment:
+      DATA_SOURCE_NAME: ${POSTGRES_CONNECTION}
+    expose:
+      - 9187
+    networks:
+      - monitor-net
+    labels:
+      org.label-schema.group: "monitoring"
+
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    container_name: nginx_exporter
+    command: [ "-nginx.scrape-uri=http://nginx:80/stub_status" ]
+    #command:
+    #  - "-nginx.scrape-uri=http://host.docker.internal/nginx_status"
+    ports:
+      - "9113:9113"
+    networks:
+      - monitor-net
+    restart: unless-stopped
+    labels:
+      org.label-schema.group: "monitoring"
+
   grafana:
     image: grafana/grafana:11.0.0
     container_name: grafana
@@ -128,6 +157,7 @@ services:
       - "9090:9090"
       - "9093:9093"
       - "9091:9091"
+      - "9187:9187"
     volumes:
       - ./caddy:/etc/caddy
     environment:

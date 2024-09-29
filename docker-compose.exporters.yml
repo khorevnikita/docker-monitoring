@@ -33,5 +33,16 @@ services:
     network_mode: host
     labels:
       org.label-schema.group: "monitoring"
-  
 
+  postgres_exporter:
+    image: wrouesnel/postgres_exporter
+    container_name: postgres_exporter
+    restart: unless-stopped
+    privileged: true
+    environment:
+      DATA_SOURCE_NAME: ${POSTGRES_CONNECTION}
+    ports:
+      - "9187:9187"
+    network_mode: host
+    labels:
+      org.label-schema.group: "monitoring"

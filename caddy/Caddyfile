@@ -32,3 +32,10 @@
     }    
     reverse_proxy pushgateway:9091
 }
+
+:9187 {
+    basicauth /* {
+        {$ADMIN_USER} {$ADMIN_PASSWORD_HASH}
+    }
+    reverse_proxy postgres_exporter:9187
+}
