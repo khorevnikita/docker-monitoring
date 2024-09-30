@@ -7,5 +7,20 @@ datasources:
     orgId: 1
     url: http://prometheus:9090
     basicAuth: false
-    isDefault: true
+    isDefault: true  # Prometheus является источником данных по умолчанию
     editable: true
+
+  - name: PostgreSQL
+    type: postgres
+    access: proxy
+    isDefault: false  # Установлено false, так как Prometheus уже по умолчанию
+    editable: true
+    url: db:5432  # Убедитесь, что 'db' — это правильное имя хоста для PostgreSQL
+    user: postgres
+    secureJsonData:
+      password: password  # Пароль должен находиться внутри secureJsonData
+    database: your_database  # Перемещено на уровень выше
+    jsonData:
+      sslmode: disable       # Перемещено на уровень выше
+    version: 1
+    readOnly: false

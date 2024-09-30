@@ -1,0 +1,255 @@
+{
+  "id": null,
+  "title": "Postgres",
+  "description": "Postgres exporter metrics",
+  "tags": [
+    "postgres"
+  ],
+  "style": "dark",
+  "timezone": "browser",
+  "editable": true,
+  "hideControls": false,
+  "sharedCrosshair": true,
+  "rows": [
+    {
+      "collapse": false,
+      "editable": true,
+      "height": "250px",
+      "panels": [
+        {
+          "id": 1,
+          "title": "Active Database Connections",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "pg_stat_activity_count{datname=\"astrolove\"}",
+              "legendFormat": "Connections",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "short",
+              "label": "Connections",
+              "min": 0
+            },
+            {
+              "format": "short",
+              "show": false
+            }
+          ],
+          "lines": true,
+          "linewidth": 2,
+          "fill": 1,
+          "legend": {
+            "show": true
+          }
+        },
+        {
+          "id": 2,
+          "title": "Transactions per Second",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "rate(pg_stat_database_xact_commit{datname=\"astrolove\"}[5m])",
+              "legendFormat": "Commits",
+              "refId": "A"
+            },
+            {
+              "expr": "rate(pg_stat_database_xact_rollback{datname=\"astrolove\"}[5m])",
+              "legendFormat": "Rollbacks",
+              "refId": "B"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "ops",
+              "label": "Transactions/sec",
+              "min": 0
+            },
+            {
+              "format": "short",
+              "show": false
+            }
+          ],
+          "lines": true,
+          "linewidth": 2,
+          "fill": 1,
+          "legend": {
+            "show": true,
+            "values": true,
+            "avg": true
+          }
+        },
+        {
+          "id": 3,
+          "title": "Cache Hit Ratio",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "(rate(pg_stat_database_blks_hit{datname=\"astrolove\"}[5m]) / (rate(pg_stat_database_blks_hit{datname=\"astrolove\"}[5m]) + rate(pg_stat_database_blks_read{datname=\"astrolove\"}[5m]))) * 100",
+              "legendFormat": "Cache Hit %",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "percent",
+              "label": "Percentage",
+              "min": 0,
+              "max": 100
+            },
+            {
+              "format": "short",
+              "show": false
+            }
+          ],
+          "lines": true,
+          "linewidth": 2,
+          "fill": 1,
+          "legend": {
+            "show": true
+          }
+        },
+        {
+          "id": 4,
+          "title": "Deadlocks",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "increase(pg_stat_database_deadlocks{datname=\"astrolove\"}[5m])",
+              "legendFormat": "Deadlocks",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "short",
+              "label": "Deadlocks",
+              "min": 0
+            },
+            {
+              "format": "short",
+              "show": false
+            }
+          ],
+          "bars": true,
+          "linewidth": 2,
+          "fill": 1,
+          "legend": {
+            "show": true
+          }
+        },
+        {
+          "id": 5,
+          "title": "Database Size",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "pg_database_size_bytes{datname=\"astrolove\"}",
+              "legendFormat": "Database Size",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "bytes",
+              "label": "Size",
+              "min": 0
+            },
+            {
+              "format": "bytes",
+              "show": false
+            }
+          ],
+          "lines": true,
+          "linewidth": 2,
+          "fill": 1,
+          "legend": {
+            "show": true
+          }
+        },
+        {
+          "id": 7,
+          "title": "Locks by Type",
+          "type": "graph",
+          "datasource": "Prometheus",
+          "targets": [
+            {
+              "expr": "pg_locks_count{datname=\"astrolove\"}",
+              "legendFormat": "{{mode}}",
+              "refId": "A"
+            }
+          ],
+          "yaxes": [
+            {
+              "format": "short",
+              "label": "Number of Locks",
+              "min": 0
+            },
+            {
+              "format": "short",
+              "show": false
+            }
+          ],
+          "stack": true,
+          "lines": false,
+          "bars": true,
+          "linewidth": 1,
+          "fill": 1,
+          "legend": {
+            "show": true
+          }
+        }
+
+
+      ],
+      "title": "Postgres exporter metrics"
+    }
+  ],
+  "time": {
+    "from": "now-15m",
+    "to": "now"
+  },
+  "timepicker": {
+    "refresh_intervals": [
+      "5s",
+      "10s",
+      "30s",
+      "1m",
+      "5m",
+      "15m",
+      "30m",
+      "1h",
+      "2h",
+      "1d"
+    ],
+    "time_options": [
+      "5m",
+      "15m",
+      "1h",
+      "6h",
+      "12h",
+      "24h",
+      "2d",
+      "7d",
+      "30d"
+    ]
+  },
+    "templating": {
+    "list": []
+  },
+  "annotations": {
+    "list": []
+  },
+  "refresh": "10s",
+  "schemaVersion": 12,
+  "version": 9,
+  "links": [],
+  "gnetId": null
+}
