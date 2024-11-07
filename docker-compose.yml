@@ -1,7 +1,7 @@
 networks:
   monitor-net:
     name: "monitor-net"
-    driver: bridge
+    external: true
 
 volumes:
   prometheus_data: { }
