@@ -118,6 +118,18 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:latest
+    container_name: kafka-exporter
+    ports:
+      - "9308:9308"
+    command:
+      - "--kafka.server=kafka:9092"
+      - "--kafka.version=2.7.0"  # Укажите версию Kafka
+      - "--log.level=info"
+    networks:
+      - monitor-net
+
   grafana:
     image: grafana/grafana:11.0.0
     container_name: grafana
@@ -129,6 +141,7 @@ services:
       - GF_SECURITY_ADMIN_USER=${ADMIN_USER:-admin}
       - GF_SECURITY_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_INSTALL_PLUGINS=mckn-funnel-panel
     restart: unless-stopped
     expose:
       - 3000
