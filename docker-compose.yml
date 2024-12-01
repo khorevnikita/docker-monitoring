@@ -127,7 +127,7 @@ services:
     image: caddy:2.7.6
     ports:
       - "8088:80"
-      - "443:443"
+      #- "443:443"
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile
       - caddy_data:/data
