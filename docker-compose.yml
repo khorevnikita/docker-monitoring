@@ -1,7 +1,7 @@
 networks:
   monitor-net:
     name: "monitor-net"
-    driver: bridge
+    external: true
 
 volumes:
   prometheus_data: { }
@@ -90,17 +90,16 @@ services:
     labels:
       org.label-schema.group: "monitoring"
 
-  postgres_exporter:
-    image: wrouesnel/postgres_exporter
-    container_name: postgres_exporter
-    restart: unless-stopped
-    privileged: true
+  mysqld_exporter:
+    image: prom/mysqld-exporter:latest
+    container_name: mysqld_exporter
     environment:
-      DATA_SOURCE_NAME: ${POSTGRES_CONNECTION}
+      DATA_SOURCE_NAME: "${MYSQL_USER}:${MYSQL_PASSWORD}@db:3306/${MYSQL_DATABASE}"
     expose:
-      - 9187
+      - 9104
     networks:
       - monitor-net
+    restart: unless-stopped
     labels:
       org.label-schema.group: "monitoring"
 
