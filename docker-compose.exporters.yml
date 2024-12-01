@@ -1,48 +1,31 @@
 services:
 
-  nodeexporter:
-    image: prom/node-exporter:v1.8.1
-    container_name: nodeexporter
-    volumes:
-      - /proc:/host/proc:ro
-      - /sys:/host/sys:ro
-      - /:/rootfs:ro
-    command:
-      - '--path.procfs=/host/proc'
-      - '--path.rootfs=/rootfs'
-      - '--path.sysfs=/host/sys'
-      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
-    restart: unless-stopped
-    network_mode: host
-    labels:
-      org.label-schema.group: "monitoring"
-
-  cadvisor:
-    image: gcr.io/cadvisor/cadvisor:v0.49.1
-    container_name: cadvisor
-    privileged: true
-    devices:
-      - /dev/kmsg:/dev/kmsg
-    volumes:
-      - /:/rootfs:ro
-      - /var/run:/var/run:ro
-      - /sys:/sys:ro
-      - /var/lib/docker/:/var/lib/docker:ro
-      - /cgroup:/cgroup:ro
-    restart: unless-stopped
-    network_mode: host
-    labels:
-      org.label-schema.group: "monitoring"
+  mysqld_exporter:
+    image: prom/mysqld-exporter:latest
+    environment:
+      DATA_SOURCE_NAME: "${MYSQL_CONNECTION}"
+    networks:
+      - monitor-net
 
   postgres_exporter:
     image: wrouesnel/postgres_exporter
-    container_name: postgres_exporter
     restart: unless-stopped
-    privileged: true
     environment:
       DATA_SOURCE_NAME: ${POSTGRES_CONNECTION}
-    ports:
-      - "9187:9187"
-    network_mode: host
-    labels:
-      org.label-schema.group: "monitoring"
+    networks:
+      - monitor-net
+
+  nginx_exporter:
+    image: nginx/nginx-prometheus-exporter:latest
+    command: [ "-nginx.scrape-uri=http://${NGINX_HOST:-nginx}:${NGINX_PORT:-80}/stub_status" ]
+    networks:
+      - monitor-net
+    restart: unless-stopped
+
+  kafka-exporter:
+    image: danielqsj/kafka-exporter:latest
+    command:
+      - "--kafka.server=${KAFKA_HOST}:${KAFKA_PORT:-9092}"
+      - "--kafka.version=2.7.0"
+    networks:
+      - monitor-net

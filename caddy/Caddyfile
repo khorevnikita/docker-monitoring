@@ -1,41 +1,56 @@
 {
-	auto_https off
-}
-:3000 {
-    reverse_proxy grafana:3000  
+    auto_https off
 }
 
-:8080 {
-    basicauth /* {
-        {$ADMIN_USER} {$ADMIN_PASSWORD_HASH}
-    }    
-    reverse_proxy cadvisor:8080
-}
-
-:9090 {
-    basicauth /* {
-        {$ADMIN_USER} {$ADMIN_PASSWORD_HASH}
-    }
+# Prometheus
+{$PROMETHEUS_DOMAIN} {
     reverse_proxy prometheus:9090
 }
 
-:9093 {
-    basicauth /* {
-        {$ADMIN_USER} {$ADMIN_PASSWORD_HASH}
-    }
+# Alertmanager
+{$ALERTMANAGER_DOMAIN} {
     reverse_proxy alertmanager:9093
 }
 
-:9091 {
-    basicauth /* {
-        {$ADMIN_USER} {$ADMIN_PASSWORD_HASH}
-    }    
+# Grafana
+{$GRAFANA_DOMAIN} {
+    reverse_proxy grafana:3000
+}
+
+# Pushgateway
+{$PUSHGATEWAY_DOMAIN} {
     reverse_proxy pushgateway:9091
 }
 
-:9104 {
-    basicauth /* {
-        {$ADMIN_USER} {$ADMIN_PASSWORD_HASH}
+# Loki
+{$LOKI_DOMAIN} {
+    reverse_proxy loki:3100
+}
+
+# Jaeger
+{$JAEGER_DOMAIN} {
+    reverse_proxy jaeger:16686
+}
+
+# OpenTelemetry Collector
+{$OTEL_DOMAIN} {
+    reverse_proxy otel-collector:4317
+}
+
+# Node Exporter
+{$NODEEXPORTER_DOMAIN} {
+    reverse_proxy nodeexporter:9100
+}
+
+# cAdvisor
+{$CADVISOR_DOMAIN} {
+    reverse_proxy cadvisor:8080
+}
+
+# Базовая аутентификация
+route {
+    basicauth {
+        admin YWRtaW5wYXNzd29yZA==
     }
-    reverse_proxy mysqld_exporter:9104
+    reverse_proxy *
 }
