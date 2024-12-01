@@ -51,6 +51,8 @@ services:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_ADMIN_PASSWORD:-admin}
       - GF_INSTALL_PLUGINS=mckn-funnel-panel
     restart: unless-stopped
+    ports:
+      - "10001:3000"
     networks:
       - monitor-net
 
@@ -121,28 +123,3 @@ services:
     command: --config=/etc/otel-collector/config.yaml
     networks:
       - monitor-net
-
-  # === Маршрутизация ===
-  caddy:
-    image: caddy:2.7.6
-    ports:
-      - "8088:80"
-      #- "443:443"
-    volumes:
-      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
-      - caddy_data:/data
-      - caddy_config:/config
-    environment:
-      PROMETHEUS_DOMAIN: prometheus.${HOST_DOMAIN}
-      ALERTMANAGER_DOMAIN: alertmanager.${HOST_DOMAIN}
-      GRAFANA_DOMAIN: grafana.${HOST_DOMAIN}
-      PUSHGATEWAY_DOMAIN: pushgateway.${HOST_DOMAIN}
-      LOKI_DOMAIN: loki.${HOST_DOMAIN}
-      JAEGER_DOMAIN: jaeger.${HOST_DOMAIN}
-      OTEL_DOMAIN: otel.${HOST_DOMAIN}
-      NODEEXPORTER_DOMAIN: nodeexporter.${HOST_DOMAIN}
-      CADVISOR_DOMAIN: cadvisor.${HOST_DOMAIN}
-    networks:
-      - monitor-net
-    labels:
-      org.label-schema.group: "proxy"
