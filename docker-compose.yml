@@ -23,8 +23,8 @@ services:
       - '--storage.tsdb.path=/prometheus'
       - '--storage.tsdb.retention.time=200h'
     restart: unless-stopped
-    expose:
-      - 9090
+    ports:
+      - "10003:9090"
     networks:
       - monitor-net
 
@@ -113,6 +113,8 @@ services:
     image: jaegertracing/all-in-one:latest
     volumes:
       - jaeger_data:/data
+    ports:
+      - "10002:16686"
     networks:
       - monitor-net
 
