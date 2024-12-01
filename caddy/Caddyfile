@@ -49,8 +49,5 @@
 
 # Базовая аутентификация
 route {
-    basicauth {
-        admin YWRtaW5wYXNzd29yZA==
-    }
     reverse_proxy *
 }
