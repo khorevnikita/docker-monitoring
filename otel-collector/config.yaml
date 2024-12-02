@@ -1,8 +1,8 @@
 receivers:
   otlp:
     protocols:
-      grpc:
-      http:
+      grpc: {}   # Порт 4317 для gRPC
+      http: {}   # Порт 4318 для HTTP
 
 exporters:
   otlphttp:
