@@ -110,14 +110,15 @@ services:
       - monitor-net
 
   otel-collector:
-    image: otel/opentelemetry-collector:latest
-    command: [ "--config=/etc/otel-collector-config.yaml" ]
+    image: otel/opentelemetry-collector-contrib:latest
+    command: ["--config=/etc/otel-collector-config.yaml"]
     volumes:
-      - ./otel-collector/config.yaml:/etc/otel-collector-config.yaml
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     ports:
       - "4317:4317"
     depends_on:
       - jaeger
+
 
   jaeger:
     image: jaegertracing/all-in-one:latest
