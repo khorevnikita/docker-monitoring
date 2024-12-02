@@ -46,6 +46,9 @@ scrape_configs:
     static_configs:
       - targets: [ 'kafka-exporter:9308' ]
 
+  - job_name: 'otel-collector'
+    static_configs:
+      - targets: [ 'otel-collector:9464' ]
 alerting:
   alertmanagers:
     - scheme: http
