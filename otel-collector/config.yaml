@@ -1,8 +1,11 @@
 receivers:
   otlp:
     protocols:
-      grpc: {}   # Порт 4317 для gRPC
-      http: {}   # Порт 4318 для HTTP
+      grpc:
+        endpoint: "0.0.0.0:4317"  # Принимает подключения gRPC со всех интерфейсов
+      http:
+        endpoint: "0.0.0.0:4318"  # Принимает подключения HTTP со всех интерфейсов
+
 
 exporters:
   otlphttp:
