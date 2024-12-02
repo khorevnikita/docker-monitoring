@@ -23,8 +23,8 @@
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "pg_stat_activity_count{datname=\"astrolove\"}",
-              "legendFormat": "Connections",
+              "expr": "pg_stat_activity_count{datname=~\"$database|.*\"}",
+              "legendFormat": "Connections - {{datname}}",
               "refId": "A"
             }
           ],
@@ -53,13 +53,13 @@
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "rate(pg_stat_database_xact_commit{datname=\"astrolove\"}[5m])",
-              "legendFormat": "Commits",
+              "expr": "rate(pg_stat_database_xact_commit{datname=~\"$database|.*\"}[5m])",
+              "legendFormat": "Commits - {{datname}}",
               "refId": "A"
             },
             {
-              "expr": "rate(pg_stat_database_xact_rollback{datname=\"astrolove\"}[5m])",
-              "legendFormat": "Rollbacks",
+              "expr": "rate(pg_stat_database_xact_rollback{datname=~\"$database|.*\"}[5m])",
+              "legendFormat": "Rollbacks - {{datname}}",
               "refId": "B"
             }
           ],
@@ -90,8 +90,8 @@
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "(rate(pg_stat_database_blks_hit{datname=\"astrolove\"}[5m]) / (rate(pg_stat_database_blks_hit{datname=\"astrolove\"}[5m]) + rate(pg_stat_database_blks_read{datname=\"astrolove\"}[5m]))) * 100",
-              "legendFormat": "Cache Hit %",
+              "expr": "(rate(pg_stat_database_blks_hit{datname=~\"$database|.*\"}[5m]) / (rate(pg_stat_database_blks_hit{datname=~\"$database|.*\"}[5m]) + rate(pg_stat_database_blks_read{datname=~\"$database|.*\"}[5m]))) * 100",
+              "legendFormat": "Cache Hit - {{datname}}",
               "refId": "A"
             }
           ],
@@ -121,8 +121,8 @@
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "increase(pg_stat_database_deadlocks{datname=\"astrolove\"}[5m])",
-              "legendFormat": "Deadlocks",
+              "expr": "increase(pg_stat_database_deadlocks{datname=~\"$database|.*\"}[5m])",
+              "legendFormat": "Deadlocks - {{datname}}",
               "refId": "A"
             }
           ],
@@ -151,8 +151,8 @@
           "datasource": "Prometheus",
           "targets": [
             {
-              "expr": "pg_database_size_bytes{datname=\"astrolove\"}",
-              "legendFormat": "Database Size",
+              "expr": "pg_database_size_bytes{datname=~\"$database|.*\"}",
+              "legendFormat": "Size - {{datname}}",
               "refId": "A"
             }
           ],
@@ -173,45 +173,25 @@
           "legend": {
             "show": true
           }
-        },
-        {
-          "id": 7,
-          "title": "Locks by Type",
-          "type": "graph",
-          "datasource": "Prometheus",
-          "targets": [
-            {
-              "expr": "pg_locks_count{datname=\"astrolove\"}",
-              "legendFormat": "{{mode}}",
-              "refId": "A"
-            }
-          ],
-          "yaxes": [
-            {
-              "format": "short",
-              "label": "Number of Locks",
-              "min": 0
-            },
-            {
-              "format": "short",
-              "show": false
-            }
-          ],
-          "stack": true,
-          "lines": false,
-          "bars": true,
-          "linewidth": 1,
-          "fill": 1,
-          "legend": {
-            "show": true
-          }
         }
-
-
       ],
       "title": "Postgres exporter metrics"
     }
   ],
+  "templating": {
+    "list": [
+      {
+        "type": "query",
+        "name": "database",
+        "label": "Database",
+        "datasource": "Prometheus",
+        "query": "label_values(pg_stat_database_xact_commit, datname)",
+        "allValue": ".*",
+        "multi": false,
+        "includeAll": true
+      }
+    ]
+  },
   "time": {
     "from": "now-15m",
     "to": "now"
@@ -241,15 +221,7 @@
       "30d"
     ]
   },
-    "templating": {
-    "list": []
-  },
-  "annotations": {
-    "list": []
-  },
   "refresh": "10s",
   "schemaVersion": 12,
-  "version": 9,
-  "links": [],
-  "gnetId": null
+  "version": 9
 }
