@@ -5,9 +5,14 @@ receivers:
       http:
 
 exporters:
-  otlp/jaeger:
-    endpoint: "jaeger:4317"
-    insecure: true
+  otlp:
+    endpoint: jaeger:4317
+    tls:
+      insecure: true
+  otlphttp:
+    endpoint: http://jaeger:4318
+    tls:
+      insecure: true
 
 processors:
   batch:
