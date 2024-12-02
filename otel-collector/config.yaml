@@ -2,20 +2,19 @@ receivers:
   otlp:
     protocols:
       grpc:
-        endpoint: "0.0.0.0:4317"  # Принимает gRPC-трассировки
       http:
-        endpoint: "0.0.0.0:4318"  # Принимает HTTP-трассировки
 
 exporters:
-  jaeger:
-    endpoint: "http://jaeger:14250"  # Отправка трассировок в Jaeger
+  otlp/jaeger:
+    endpoint: "jaeger:4317"
+    insecure: true
 
 processors:
-  batch: {}
+  batch:
 
 service:
   pipelines:
     traces:
-      receivers: [otlp]       # Получает данные через OTLP (gRPC или HTTP)
-      processors: [batch]     # Обрабатывает данные
-      exporters: [jaeger]     # Отправляет данные в Jaeger
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp/jaeger]
